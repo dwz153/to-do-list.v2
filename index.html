@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>할일 목록</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-top">
+        <h1 class="title">My Tasks</h1>
+        <span class="date" id="today-date"></span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-info">
+          <span id="done-count">0</span> / <span id="total-count">0</span> 완료
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="input-area">
+      <div class="input-row">
+        <input
+          type="text"
+          id="task-input"
+          class="task-input"
+          placeholder="새 할일을 입력하세요..."
+          maxlength="100"
+        />
+        <button class="add-btn" id="add-btn" title="추가">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="options-row">
+        <select class="priority-select" id="priority-select">
+          <option value="normal">보통 우선순위</option>
+          <option value="high">높은 우선순위</option>
+          <option value="low">낮은 우선순위</option>
+        </select>
+        <input type="date" class="date-input" id="due-date" />
+      </div>
+    </div>
+
+    <div class="filter-tabs">
+      <button class="tab active" data-filter="all">전체</button>
+      <button class="tab" data-filter="active">진행중</button>
+      <button class="tab" data-filter="completed">완료됨</button>
+    </div>
+
+    <ul class="task-list" id="task-list">
+      <li class="empty-state" id="empty-state">
+        <svg viewBox="0 0 64 64" fill="none">
+          <rect x="8" y="12" width="48" height="44" rx="6" stroke="currentColor" stroke-width="2"/>
+          <path d="M22 2v8M42 2v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M8 24h48" stroke="currentColor" stroke-width="2"/>
+          <path d="M22 36h20M22 44h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <p>할일이 없습니다</p>
+        <span>위에서 새 할일을 추가해보세요!</span>
+      </li>
+    </ul>
+
+    <footer class="footer" id="footer">
+      <span id="remaining-count"></span>
+      <button class="clear-btn" id="clear-btn">완료 항목 삭제</button>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
