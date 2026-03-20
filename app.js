@@ -4,6 +4,7 @@ const taskList      = document.getElementById('task-list');
 const emptyState    = document.getElementById('empty-state');
 const prioritySelect= document.getElementById('priority-select');
 const dueDateInput  = document.getElementById('due-date');
+const dueTimeInput  = document.getElementById('due-time');
 const tabs          = document.querySelectorAll('.tab');
 const clearBtn      = document.getElementById('clear-btn');
 const doneCount     = document.getElementById('done-count');
@@ -69,6 +70,7 @@ function addTask() {
     text,
     priority:  prioritySelect.value,
     dueDate:   dueDateInput.value,
+    dueTime:   dueDateInput.value ? dueTimeInput.value : '',
     completed: false,
     createdAt: new Date().toISOString()
   };
@@ -76,8 +78,9 @@ function addTask() {
   tasks.unshift(task);
   save();
 
-  taskInput.value   = '';
-  dueDateInput.value = '';
+  taskInput.value      = '';
+  dueDateInput.value   = '';
+  dueTimeInput.value   = '';
   prioritySelect.value = 'normal';
   taskInput.focus();
 
@@ -204,15 +207,29 @@ function createTaskEl(task) {
   const priorityLabel = { high: '높음', normal: '보통', low: '낮음' }[task.priority];
 
   const dueLabelHtml = task.dueDate ? (() => {
-    const due     = new Date(task.dueDate);
-    const today   = new Date(); today.setHours(0,0,0,0);
-    const isOver  = due < today && !task.completed;
-    const dateStr = new Intl.DateTimeFormat('ko-KR', { month: 'short', day: 'numeric' }).format(due);
+    const dateStr = new Intl.DateTimeFormat('ko-KR', { month: 'short', day: 'numeric' }).format(new Date(task.dueDate));
+
+    let isOver = false;
+    if (!task.completed) {
+      if (task.dueTime) {
+        const dueDateTime = new Date(`${task.dueDate}T${task.dueTime}`);
+        isOver = dueDateTime < new Date();
+      } else {
+        const dueDay = new Date(task.dueDate);
+        const today  = new Date(); today.setHours(0,0,0,0);
+        isOver = dueDay < today;
+      }
+    }
+
+    const timeStr = task.dueTime
+      ? ` · ${task.dueTime.slice(0,5)}`
+      : '';
+
     return `<span class="due-label${isOver ? ' overdue' : ''}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
       </svg>
-      ${isOver ? '기한 초과 · ' : ''}${dateStr}
+      ${isOver ? '기한 초과 · ' : ''}${dateStr}${timeStr}
     </span>`;
   })() : '';
 
